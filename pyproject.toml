@@ -1,0 +1,7 @@
+[project]
+name = "ejercicios_individualesmodulo3"
+version = "0.1.0"
+description = "Ejercicios Individuales del Módulo 3 -  Mayerly Cardenas"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
