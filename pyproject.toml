@@ -1,7 +1,24 @@
 [project]
-name = "ejercicios-individualesmodulo3"
-version = "0.1.0"
-description = "Add your description here"
+name = "Ejercicios_IndividualesModulo3"
+version = "1.0.0"
+description = "Ejercicios individuales del Módulo 3 - SENA"
+authors = [
+    { name = "Nubia Mayerly Cárdenas Bautista" }
+]
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = []
+requires-python = ">=3.10"
+
+dependencies = [
+    "pytest>=8.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "C90"]
+ignore = ["E501"]
