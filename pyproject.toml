@@ -1,9 +1,7 @@
 [project]
 name = "ejercicios-individualesmodulo3"
 version = "0.1.0"
-dependencies = ["ruff", "pytest", "rich"]
-requires-python = ">=3.12"
-
-[tool.ruff.lint]
-select = ["E", "F", "W"]
-ignore = []
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
