@@ -1,41 +1,57 @@
 from functools import reduce
-from typing import List
 
-def suma_numeros(numeros: List[int]) -> int:
+def calcular_operaciones():
     """
-    Calcula la suma total de una lista de números usando reduce.
-    Devuelve 0 si la lista está vacía.
-
-    Args:
-        numeros (List[int]): Lista de números enteros.
+    Utiliza functools.reduce para realizar dos operaciones:
+    1. Calcular la suma total de una lista de números.
+    2. Concatenar una lista de strings en una sola frase.
 
     Returns:
-        int: Suma total de los números.
-    """
-    return reduce(lambda a, b: a + b, numeros, 0)  # Valor inicial 0
-
-def concatenar_strings(strings: List[str]) -> str:
-    """
-    Concatenar una lista de strings en una sola cadena usando reduce.
-    Devuelve cadena vacía si la lista está vacía.
-
-    Args:
-        strings (List[str]): Lista de strings.
-
-    Returns:
-        str: Cadena concatenada.
-    """
-    return reduce(lambda a, b: a + b, strings, "")  # Valor inicial ""
-
-def main():
-    """
-    Función principal para probar suma y concatenación con reduce.
+        dict: Un diccionario con la suma total y la frase concatenada.
     """
     numeros = [1, 2, 3, 4, 5]
-    frase = ["Hola", " ", "SENA", "!"]
+    palabras = ["Hola", " ", "SENA", "!"]
 
-    print("Suma de números:", suma_numeros(numeros))
-    print("Concatenación de strings:", concatenar_strings(frase))
+    # Calcular la suma total usando reduce
+    suma_total = reduce(lambda x, y: x + y, numeros)
+
+    # Concatenar palabras usando reduce
+    frase_concatenada = reduce(lambda x, y: x + y, palabras)
+
+    return {
+        "suma_total": suma_total,
+        "frase": frase_concatenada
+    }
+
+
+def mostrar_resultados(resultados):
+    """
+    Muestra los resultados obtenidos en consola.
+    """
+    print(f"Suma total: {resultados['suma_total']}")
+    print(f"Frase concatenada: {resultados['frase']}")
+
+
+def menu_ejercicio_9():
+    """
+    Menú principal para ejecutar el ejercicio 9.
+    """
+    while True:
+        print("\n--- Ejercicio 9: Operaciones con reduce ---")
+        print("1. Calcular operaciones")
+        print("2. Salir al menú principal")
+
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+            resultados = calcular_operaciones()
+            mostrar_resultados(resultados)
+        elif opcion == "2":
+            print("Regresando al menú principal...")
+            break
+        else:
+            print("Opción no válida. Intente nuevamente.")
+
 
 if __name__ == "__main__":
-    main()
+    menu_ejercicio_9()
