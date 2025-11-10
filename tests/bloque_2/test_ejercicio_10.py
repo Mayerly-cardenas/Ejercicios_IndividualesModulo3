@@ -1,19 +1,11 @@
-import io
-import sys
-from src.bloque_2.ejercicio_10 import explorar_estructura
+from bloque_2.ejercicio_10 import explorar_estructura
 
-def explorar_estructura(elemento, profundidad=0):
-    """
-    Función recursiva que imprime los valores no-iterables de una estructura
-    (listas, tuplas, diccionarios) con su profundidad.
-    """
-    if isinstance(elemento, dict):
-        for valor in elemento.values():
-            explorar_estructura(valor, profundidad + 1)
-    elif isinstance(elemento, (list, tuple)):
-        for item in elemento:
-            explorar_estructura(item, profundidad + 1)
-    else:
-        # Sumamos 1 a profundidad al imprimir para que el nivel base sea 1
-        print(f"Valor: {elemento}, Profundidad: {profundidad + 1}")
+def test_explorar_estructura(capsys):
+    estructura = [1, [2, 3], {"a": 4}]
+    explorar_estructura(estructura)
+    salida = capsys.readouterr().out
 
+    assert "Valor: 1, Profundidad: 2" in salida
+    assert "Valor: 2, Profundidad: 3" in salida
+    assert "Valor: 3, Profundidad: 3" in salida
+    assert "Valor: 4, Profundidad: 3" in salida
