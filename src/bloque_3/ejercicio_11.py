@@ -1,49 +1,82 @@
 from rich.console import Console
+from rich.table import Table
+import os
 
+RUTA_ARCHIVO = "tareas.txt"
 console = Console()
-ARCHIVO_TAREAS = "tareas.txt"
+
 
 def agregar_tarea(tarea: str) -> None:
-    """Agrega una tarea al final del archivo tareas.txt"""
-    with open(ARCHIVO_TAREAS, "a", encoding="utf-8") as archivo:
-        archivo.write(tarea + "\n")
-    console.print(f"[green]Tarea agregada:[/green] {tarea}")
+    """
+    Agrega una tarea al archivo tareas.txt.
+    Si el archivo no existe, lo crea automáticamente.
+    """
+    with open(RUTA_ARCHIVO, "a", encoding="utf-8") as archivo:
+        archivo.write(tarea.strip() + "\n")
+
 
 def ver_tareas() -> list[str]:
-    """Lee todas las tareas del archivo y devuelve una lista"""
-    try:
-        with open(ARCHIVO_TAREAS, "r", encoding="utf-8") as archivo:
-            tareas = [linea.strip() for linea in archivo if linea.strip()]
-        console.print("[blue]Lista de tareas:[/blue]")
-        for i, tarea in enumerate(tareas, 1):
-            console.print(f"{i}. {tarea}")
-        return tareas
-    except FileNotFoundError:
-        console.print("[yellow]No hay tareas aún.[/yellow]")
+    """
+    Lee todas las tareas del archivo y las devuelve como una lista.
+    Si no hay tareas o el archivo no existe, devuelve una lista vacía.
+    """
+    if not os.path.exists(RUTA_ARCHIVO):
         return []
 
-def main() -> None:
-    """Menú principal para gestionar tareas"""
+    with open(RUTA_ARCHIVO, "r", encoding="utf-8") as archivo:
+        tareas = [linea.strip() for linea in archivo.readlines() if linea.strip()]
+    return tareas
+
+
+def mostrar_tareas(tareas: list[str]) -> None:
+    """
+    Muestra las tareas en una tabla utilizando la librería rich.
+    """
+    if not tareas:
+        console.print("[yellow]No hay tareas registradas.[/yellow]")
+        return
+
+    tabla = Table(title="📋 Lista de Tareas", show_lines=True)
+    tabla.add_column("N°", justify="center", style="cyan")
+    tabla.add_column("Tarea", style="green")
+
+    for i, tarea in enumerate(tareas, start=1):
+        tabla.add_row(str(i), tarea)
+
+    console.print(tabla)
+
+
+def menu_tareas():
+    """
+    Muestra el menú interactivo del gestor de tareas.
+    """
     while True:
-        console.print("\n[bold cyan]Gestor de Tareas[/bold cyan]")
-        console.print("1. Ver tareas")
-        console.print("2. Agregar tarea")
-        console.print("3. Salir")
-        opcion = console.input("Seleccione una opción (1-3): ").strip()
+        console.print("\n[bold blue]--- Gestor de Tareas ---[/bold blue]")
+        console.print("1. Agregar tarea")
+        console.print("2. Ver tareas")
+        console.print("3. Salir al menú principal")
+
+        opcion = input("\nSeleccione una opción: ")
 
         if opcion == "1":
-            ver_tareas()
-        elif opcion == "2":
-            tarea = console.input("Ingrese la tarea: ").strip()
+            tarea = input("Ingrese la nueva tarea: ").strip()
             if tarea:
                 agregar_tarea(tarea)
+                console.print("[green]Tarea agregada correctamente.[/green]")
             else:
-                console.print("[red]No se puede agregar tarea vacía[/red]")
+                console.print("[red]Debe ingresar una tarea válida.[/red]")
+
+        elif opcion == "2":
+            tareas = ver_tareas()
+            mostrar_tareas(tareas)
+
         elif opcion == "3":
-            console.print("[bold green]¡Hasta luego![/bold green]")
+            console.print("[blue]Regresando al menú principal...[/blue]")
             break
+
         else:
-            console.print("[red]Opción inválida, intente de nuevo[/red]")
+            console.print("[red]Opción inválida. Intente de nuevo.[/red]")
+
 
 if __name__ == "__main__":
-    main()
+    menu_tareas()
