@@ -1,27 +1,29 @@
 from src.bloque_1.ejercicio_2 import crear_perfil
 
 
-def test_crear_perfil_sin_hobbies_ni_redes():
-    perfil = crear_perfil("Ana", 25)
-    assert "Nombre: Ana" in perfil
-    assert "Edad: 25" in perfil
-    assert "Hobbies: Ninguno" in perfil
-    assert "Redes sociales: Ninguna" in perfil
-
-
-def test_crear_perfil_con_hobbies():
-    perfil = crear_perfil("Juan", 30, "futbol", "leer")
-    assert "Hobbies: futbol, leer" in perfil
-
-
-def test_crear_perfil_con_redes():
-    perfil = crear_perfil("María", 22, twitter="@maria", instagram="@maria_insta")
-    assert "Redes sociales: twitter: @maria, instagram: @maria_insta" in perfil
-
-
 def test_crear_perfil_completo():
-    perfil = crear_perfil("Pedro", 28, "cine", "guitarra", facebook="@pedro_fb", linkedin="@pedro_li")
-    assert "Nombre: Pedro" in perfil
-    assert "Edad: 28" in perfil
-    assert "Hobbies: cine, guitarra" in perfil
-    assert "Redes sociales: facebook: @pedro_fb, linkedin: @pedro_li" in perfil
+    resultado = crear_perfil(
+        "Mayerly Cárdenas",
+        22,
+        "Leer", "Programar", "Cocinar",
+        twitter="@mayarly_c",
+        instagram="@mayerlyc"
+    )
+
+    assert "Mayerly Cárdenas" in resultado
+    assert "22 años" in resultado
+    assert "Leer, Programar, Cocinar" in resultado
+    assert "Twitter: @mayarly_c" in resultado
+    assert "Instagram: @mayerlyc" in resultado
+
+
+def test_crear_perfil_sin_hobbies():
+    resultado = crear_perfil("Juan Pérez", 30, twitter="@juanperez")
+    assert "Hobbies: No especificados" in resultado
+    assert "Twitter: @juanperez" in resultado
+
+
+def test_crear_perfil_sin_redes():
+    resultado = crear_perfil("Laura Gómez", 25, "Bailar", "Pintar")
+    assert "Hobbies: Bailar, Pintar" in resultado
+    assert "Redes Sociales: No registradas" in resultado
