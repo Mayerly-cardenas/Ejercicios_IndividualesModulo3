@@ -1,20 +1,18 @@
-from typing import Callable
-
-def crear_contador() -> Callable[[], int]:
+def crear_contador():
     """
-    Crea un contador independiente utilizando un closure.
+    Crea un contador de llamadas usando un closure (función interna que recuerda su estado).
 
     Returns:
-        Callable[[], int]: Función que al llamarse incrementa y devuelve el conteo.
+        function: Una función que, al ser llamada, incrementa y devuelve el conteo actual.
     """
     conteo = 0
 
     def incrementar() -> int:
         """
-        Incrementa el valor del contador en 1 y lo devuelve.
+        Incrementa el contador en 1 y devuelve su valor actualizado.
 
         Returns:
-            int: Valor actual del contador después de incrementar.
+            int: El número de veces que se ha llamado la función.
         """
         nonlocal conteo
         conteo += 1
@@ -24,20 +22,18 @@ def crear_contador() -> Callable[[], int]:
 
 
 def main():
-    """
-    Función principal para probar la funcionalidad de contadores independientes.
-    """
-    contador1 = crear_contador()
-    contador2 = crear_contador()
+    """Demostración del funcionamiento del closure."""
+    contador_a = crear_contador()
+    contador_b = crear_contador()
 
-    print("Contador 1:")
-    print(contador1())  # 1
-    print(contador1())  # 2
+    print(" Contador A:")
+    print(contador_a())  # 1
+    print(contador_a())  # 2
+    print(contador_a())  # 3
 
-    print("Contador 2:")
-    print(contador2())  # 1
-    print(contador2())  # 2
-    print(contador1())  # 3
+    print("\n Contador B:")
+    print(contador_b())  # 1
+    print(contador_b())  # 2
 
 
 if __name__ == "__main__":
