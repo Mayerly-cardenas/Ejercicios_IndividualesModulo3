@@ -10,7 +10,7 @@ def tienda_ropa():
     ]
 
     while True:
-        print("\n===== TIENDA DE ROPA MAYARLY =====")
+        print("\n===== TIENDA DE ROPA MAYERLY =====")
         print("1. Ver productos")
         print("2. Aplicar descuento del 10%")
         print("3. Eliminar un producto")
@@ -66,7 +66,7 @@ def tienda_ropa():
                 print("No se agregó ningún producto al carrito.")
 
         elif opcion == "5":
-            print("Saliendo de la tienda... ¡Gracias por su visita! 🛍️")
+            print("Saliendo de la tienda... ¡Gracias por su visita! ")
             break
 
         else:
