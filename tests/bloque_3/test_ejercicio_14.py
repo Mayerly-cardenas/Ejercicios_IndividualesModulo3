@@ -1,43 +1,80 @@
-import os
 import pytest
-from src.bloque_3 import ejercicio_14 as rep
+import os
+import tempfile
+import json
+import csv
+# ¡Línea de importación clave! Asegúrate de que tu archivo en src se llame ejercicio14.py
+from src.bloque_3.ejercicio_14 import leer_csv, leer_json, generar_reporte
 
-CSV_PRUEBA = "estudiantes.csv"
-JSON_PRUEBA = "cursos.json"
-REPORTE_PRUEBA = "reporte.txt"
+# Datos de prueba para crear archivos temporales
+TEST_CSV_DATA = [
+    {"id_estudiante": "101", "nombre": "Ana Pérez", "id_cursos": "M1, F2"},
+    {"id_estudiante": "102", "nombre": "Juan López", "id_cursos": "M1"},
+    {"id_estudiante": "103", "nombre": "Marta Diaz", "id_cursos": ""},
+]
 
-@pytest.fixture(autouse=True)
-def setup_archivos():
-    # Crear archivos de prueba
-    with open(CSV_PRUEBA, "w", encoding="utf-8") as f:
-        f.write("nombre,cursos\nAlice,1,2\nBob,2,3\n")
+TEST_JSON_DATA = {
+    "M1": "Matemáticas I",
+    "F2": "Física II",
+    "P3": "Programación Avanzada"
+}
 
-    cursos_data = {
-        "1": {"nombre": "Matemáticas"},
-        "2": {"nombre": "Física"},
-        "3": {"nombre": "Química"}
-    }
-    with open(JSON_PRUEBA, "w", encoding="utf-8") as f:
-        import json
-        json.dump(cursos_data, f)
 
-    yield
+@pytest.fixture
+def archivos_temporales():
+    """Crea archivos temporales CSV y JSON para las pruebas."""
+    temp_dir = tempfile.mkdtemp()
 
-    # Limpiar archivos después del test
-    for archivo in [CSV_PRUEBA, JSON_PRUEBA, REPORTE_PRUEBA]:
-        if os.path.exists(archivo):
-            os.remove(archivo)
+    # 1. Crear CSV de estudiantes
+    csv_path = os.path.join(temp_dir, "estudiantes_test.csv")
+    with open(csv_path, mode='w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=["id_estudiante", "nombre", "id_cursos"])
+        writer.writeheader()
+        writer.writerows(TEST_CSV_DATA)
 
-def test_generar_reporte(capsys):
-    estudiantes = rep.leer_csv(CSV_PRUEBA)
-    cursos = rep.leer_json(JSON_PRUEBA)
-    rep.generar_reporte(estudiantes, cursos, REPORTE_PRUEBA)
+    # 2. Crear JSON de cursos
+    json_path = os.path.join(temp_dir, "cursos_test.json")
+    with open(json_path, mode='w', encoding='utf-8') as f:
+        json.dump(TEST_JSON_DATA, f)
 
-    # Revisar que el archivo se creó
-    assert os.path.exists(REPORTE_PRUEBA)
+    yield csv_path, json_path
 
-    # Capturar salida en consola
-    captured = capsys.readouterr()
-    assert "Reporte de Estudiantes y Cursos" in captured.out
-    assert "Alice" in captured.out
-    assert "Matemáticas" in captured.out
+    # Limpieza
+    try:
+        os.remove(csv_path)
+        os.remove(json_path)
+        os.rmdir(temp_dir)
+    except Exception:
+        pass
+
+
+def test_leer_csv_correcto(archivos_temporales):
+    """Verifica que leer_csv cargue correctamente los datos y separe los IDs de cursos."""
+    csv_path, _ = archivos_temporales
+    datos = leer_csv(csv_path)
+
+    assert len(datos) == 3
+    assert datos[0]['nombre'] == 'Ana Pérez'
+    assert datos[0]['cursos'] == ['M1', 'F2']
+
+
+def test_leer_csv_no_encontrado():
+    """Verifica el manejo de archivo no encontrado."""
+    datos = leer_csv("ruta/invalida/no_existe.csv")
+    assert datos == []
+
+
+def test_generar_reporte_contenido():
+    """Verifica que el reporte genere el contenido esperado combinando datos."""
+    estudiantes_data = [
+        {"id_estudiante": "1", "nombre": "Luisa", "cursos": ["C1", "C2"]},
+        {"id_estudiante": "2", "nombre": "Pedro", "cursos": []},
+    ]
+    cursos_data = {"C1": "Cloud", "C2": "Backend"}
+
+    reporte = generar_reporte(estudiantes_data, cursos_data)
+
+    assert "**Luisa**" in reporte
+    assert "- Cloud" in reporte
+    assert "**Pedro**" in reporte
+    assert "*No tiene cursos inscritos.*" in reporte

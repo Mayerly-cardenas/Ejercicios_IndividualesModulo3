@@ -1,8 +1,0 @@
-Metadata-Version: 2.4
-Name: ejercicios-individualesmodulo3
-Version: 0.1.0
-Summary: Ejercicios individuales del Módulo 3 - Bloques 1 a 3
-Requires-Python: >=3.11
-Requires-Dist: pytest
-Requires-Dist: ruff
-Requires-Dist: rich

@@ -19,3 +19,10 @@ ignore = ["E501"]
 addopts = "-v --maxfail=1 --disable-warnings"
 testpaths = ["tests"]
 pythonpath = ["src"]
+python_files = [
+    "test_*.py",
+    "*_test.py"
+]
+python_functions = [
+    "test_*"
+]
